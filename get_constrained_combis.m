@@ -33,7 +33,7 @@ final_combis=[]; % for the final combinations
 cnt=zeros(numel(ids),1);
 
 for iID = 1:numel(ids) % loop through IDs
-    tmpIdx = find(combis(:,:)==iID); % find (linar) indices of the current ID in the combis array
+    tmpIdx = find(combis(:,:)==iID); % find (linear) indices of the current ID in the combis array
     [r,~]= ind2sub(size(combis),tmpIdx); % convert linear indices into row and col indices
     for iR = 1:numel(r) % loop through rows of combis array in which current ID occurrs
         iRth_row = r(iR);
@@ -42,10 +42,10 @@ for iID = 1:numel(ids) % loop through IDs
             cnt(combis(iRth_row,ik)) = cnt(combis(iRth_row,ik))+1; % counter of the index in iR-th row and ik-th column of combis array
             if takeIt == true && cnt(combis(iRth_row,ik)) <= n_constrain, takeIt = true; else, takeIt = false; end % if one of the indices contained in the iR-th row occurrs already 4 times in the final array, dont take this row
         end
-        if takeIt % if none of the indices in iR-th row of combis array occurrs already 4 times in the list of final combinatinos, add it
+        if takeIt % if none of the indices in iR-th row of combis array occurrs already n_constrain times in the list of final combinatinos, add it
             final_combis = [final_combis; combis(iRth_row,:)]; %...add the iR-th row
         else % subtract again from counter of the indices contained in the iRth row, if row has not been taken
-            for ik = 1:k % loop through 2 (k) columns of the combis array in the rows indexed by r
+            for ik = 1:k % loop through k columns of the combis array in the rows indexed by r
                 cnt(combis(iRth_row,ik)) = cnt(combis(iRth_row,ik))-1; % counter of the index in iR-th row and ik-th column of combis array
             end
         end
@@ -53,7 +53,7 @@ for iID = 1:numel(ids) % loop through IDs
     end
 end
 
-% Shuffle the first and second positions
+% Shuffle the k positions
 for idx = 1:size(final_combis,1)
     final_combis(idx,:) = final_combis(idx,randperm(k));
 end
